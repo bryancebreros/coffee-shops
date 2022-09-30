@@ -5,6 +5,8 @@ import Banner from '../components/banner'
 import Card from '../components/card'
 import coffeeStoresData from '../data/coffee-stores.json'
 import { fetchCoffeeStores } from '../lib/coffee-stores'
+
+import useTrackLocation from '../hooks/use-track-location'
 export async function getStaticProps(context) {
   const coffeeStores = await fetchCoffeeStores()
   
@@ -13,15 +15,18 @@ export async function getStaticProps(context) {
         coffeeStores
     }
     
-}
+  }
   
 }
 
 export default function Home(props) {
   console.log(props);
-  console.log('hi');
+  const { handleTrackLocation, latLong, locationErrorMsg, isFindingLocation } = useTrackLocation();
+
+  console.log({ latLong, locationErrorMsg });
   const handleClick = () => {
     console.log('holaaaa');
+    handleTrackLocation();
   }
   return (
     <div className={styles.container}>
@@ -35,28 +40,27 @@ export default function Home(props) {
         <h1 className={styles.title}>
           Coffee Stores Nearby
         </h1>
-        <Banner buttonText='View Stores' onClick={handleClick} />
+        <Banner buttonText={isFindingLocation ? "Locating..." : "View stores nearby"} onClick={handleClick} />
+        {locationErrorMsg && <p>Something went wrong: {locationErrorMsg}</p>}
         <div className={styles.heroImage}>
           <Image src="/static/gowon-sip.png" width={500} height={625}></Image>
         </div>
-        {props.coffeeStores.length > 0 && (
-          <div>
-            <h2 className={styles.heading2}>Toronto Stores</h2>
-            <div className={styles.cardLayout}>
-            {props.coffeeStores.map((coffeeStore) => {
-              return (
-                <Card key={coffeeStore.id} name={coffeeStore.name} href={`/coffee-store/${coffeeStore.id}`} imgUrl={coffeeStore.imgUrl ||  "/static/noimage.jpg"}/>
-              )
-            })}
+        <div className={styles.sectionWrapper}>
+          {props.coffeeStores.length > 0 && (
+            <>
+              <h2 className={styles.heading2}>Toronto Stores</h2>
+              <div className={styles.cardLayout}>
+              {props.coffeeStores.map((coffeeStore) => {
+                return (
+                  <Card key={coffeeStore.id} name={coffeeStore.name} href={`/coffee-store/${coffeeStore.id}`} imgUrl={coffeeStore.imgUrl ||  "/static/noimage.jpg"}/>
+                )
+              })}
+              </div>
+            </>
+          )}
         </div>
-          </div>
-        )}
         
       </main>
-
-      <footer className={styles.footer}>
-        
-      </footer>
     </div>
   )
 }

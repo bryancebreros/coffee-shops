@@ -1,21 +1,25 @@
+import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router"
 import Image from "next/image";
 import Head from "next/head"
 import Link from "next/link"
 import cls from "classnames";
-import coffeeStoresData from "../../data/coffee-stores.json"
 import styles from "../../styles/coffee-store.module.css"
 import { fetchCoffeeStores } from "../../lib/coffee-stores";
-
+import { StoreContext } from "../../store/store-context";
+import {isEmpty} from "../../utils"
 export async function getStaticProps(staticProps) {
+  
     const params = staticProps.params;
+    console.log("params ->", params);
     const coffeeStores = await fetchCoffeeStores()
+    
+    const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+      return coffeeStore.id.toString() === params.id 
+    })
     return {
         props: {
-            coffeeStore: coffeeStores
-            .find((coffeStore) => {
-                return coffeStore.id.toString() === params.id 
-            })
+            coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {}
         }
     }
 }
@@ -34,7 +38,35 @@ export async function getStaticPaths() {
         fallback: true
     }
 }
-// const handleUpvoteButton = async () => {
+
+const CoffeeStore = (initialProps) => {
+    const router = useRouter()
+
+    
+    if(router.isFallback) {
+        return <div>Loading...</div>
+    }
+    console.log("hi", initialProps);
+    const id = router.query.id
+    const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore)
+
+    const {
+      state: {coffeeStores},
+    } = useContext(StoreContext)
+
+    useEffect(() => {
+      if(isEmpty(initialProps.coffeeStore)){
+        
+        if(coffeeStores.length > 0){
+          const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+            return coffeeStore.id.toString() === id
+          })
+          setCoffeeStore(findCoffeeStoreById)
+        }
+      }
+    }, [id])
+    const {name, address, street,  imgUrl, votingCount} = coffeeStore
+    // const handleUpvoteButton = async () => {
     // try {
     //   const response = await fetch("/api/favouriteCoffeeStoreById", {
     //     method: "PUT",
@@ -60,15 +92,6 @@ export async function getStaticPaths() {
 //   if (error) {
 //     return <div>Something went wrong retrieving coffee store page</div>;
 //   }
-const CoffeeShop = (props) => {
-    const router = useRouter()
-
-    
-    if(router.isFallback) {
-        return <div>Loading...</div>
-    }
-    console.log("hi", props);
-    const {name, address, street,  imgUrl, votingCount} = props.coffeeStore
     return (
         <div className={styles.layout}>
       <Head>
@@ -143,4 +166,4 @@ const CoffeeShop = (props) => {
     
 }
 
-export default CoffeeShop
+export default CoffeeStore

@@ -74,7 +74,7 @@ export default function Home(props) {
         {coffeeStoresError && <p>Something went wrong: {coffeeStoresError}</p>}
         {locationErrorMsg && <p>Something went wrong: {locationErrorMsg}</p>}
         <div className={styles.heroImage}>
-          <Image src="/static/gowon-sip.png" width={500} height={625}></Image>
+          <Image src="/static/gowon-sip.png" alt="" width={500} height={625}></Image>
         </div>
         {coffeeStores.length > 0 && (
           <div className={styles.sectionWrapper}>

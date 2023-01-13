@@ -1,4 +1,4 @@
-import Document, {Html, Head, Body, Main, NextScript} from "next/document"
+import Document, {Html, Head, Main, NextScript} from "next/document"
 class MyDocument extends Document{
     render() {
         return (
@@ -23,10 +23,10 @@ class MyDocument extends Document{
                         crossOrigin="anonymous"
                     ></link>
                 </Head>
-                <Body>
+                <body>
                     <Main></Main>
                     <NextScript />
-                </Body>
+                </body>
             </Html>
             )
     }

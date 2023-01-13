@@ -39,19 +39,17 @@ export async function getStaticPaths() {
 }
 
 const CoffeeStore = (initialProps) => {
-  const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore)
-  const {
-    state: {coffeeStores},
-  } = useContext(StoreContext)
-
-  const router = useRouter()
+    const router = useRouter()
   
     
     
     
     const id = router.query.id
+    const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore)
 
-    
+    const {
+      state: {coffeeStores},
+    } = useContext(StoreContext)
     const handleCreateCoffeeStore = async (coffeeStore) => {
       try {
         const { id, name, voting, imgUrl, street, address } = coffeeStore;
@@ -88,7 +86,7 @@ const CoffeeStore = (initialProps) => {
       } else {
         handleCreateCoffeeStore(initialProps.coffeeStore)
       }
-    }, [id, initialProps.coffeeStore, coffeeStores])
+    }, [id, initialProps.coffeeStore])
     const {
       name = "", 
       address = "", 

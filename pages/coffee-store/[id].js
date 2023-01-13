@@ -24,8 +24,7 @@ export async function getStaticProps(staticProps) {
 }
 
 export async function getStaticPaths() {
-    const data = await fetchCoffeeStores()
-    const coffeeStores = data.json()
+    const coffeeStores = await fetchCoffeeStores()
     const paths = coffeeStores.map((coffeeStore) => {
         return {
             params: {
@@ -88,12 +87,7 @@ const CoffeeStore = (initialProps) => {
         handleCreateCoffeeStore(initialProps.coffeeStore)
       }
     }, [id, initialProps.coffeeStore])
-    const {
-      name = "", 
-      address = "", 
-      street = "", 
-      imgUrl ="",
-    } = coffeeStore
+    
 
     const [votingCount, setVotingCount] = useState(0)
 
@@ -108,6 +102,12 @@ const CoffeeStore = (initialProps) => {
     if (router.isFallback){
       return <div>Loading...</div>
     }
+    const {
+      name = "", 
+      address = "", 
+      street = "", 
+      imgUrl ="",
+    } = coffeeStore
     const handleUpvoteButton = async () => {
       try {
         const response = await fetch("/api/favoriteCoffeeStoreById", {

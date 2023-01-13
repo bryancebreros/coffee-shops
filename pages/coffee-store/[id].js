@@ -24,16 +24,20 @@ export async function getStaticProps(staticProps) {
 }
 
 export async function getStaticPaths() {
-    const coffeeStores = await fetchCoffeeStores()
-    const paths = coffeeStores.map((coffeeStore) => {
-        return {
-            params: {
-                id: coffeeStore.id.toString()
-            }
-        }
-    })
+    
     return {
-        paths,
+        paths: [
+          {
+            params: {id: '59f784dd28122f14f9d5d63d'},
+          },
+          {
+            params: {id: '4b2274c1f964a5200f4724e3'},
+          },
+          {
+            params: {id: '59add6d3c824ae7692f4a8e9'},
+          },
+
+        ],
         fallback: true
     }
 }
